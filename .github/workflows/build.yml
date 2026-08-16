@@ -1,0 +1,221 @@
+name: Setup Ultimate Champion Project
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  setup-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Java Development Kit
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Create Flutter Project Structure
+        run: |
+          rm -rf * .github
+          flutter create --org com.geetesh.gkirayaplus --project-name g_kiraya_plus .
+          flutter pub add firebase_core firebase_auth cloud_firestore
+          mkdir -p .github/workflows
+
+      - name: Write App Code to main.dart
+        run: |
+          cat << 'EOF' > lib/main.dart
+          import 'package:flutter/material.dart';
+
+          void main() {
+            WidgetsFlutterBinding.ensureInitialized();
+            runApp(GKirayaPlusApp());
+          }
+
+          class GKirayaPlusApp extends StatelessWidget {
+            @override
+            Widget build(BuildContext context) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                title: 'G-Kiraya Plus',
+                theme: ThemeData(
+                  primarySwatch: Colors.teal,
+                  useMaterial3: true,
+                  scaffoldBackgroundColor: Color(0xFFF1F5F9),
+                ),
+                home: SplashScreen(),
+              );
+            }
+          }
+
+          class SplashScreen extends StatefulWidget {
+            @override
+            _SplashScreenState createState() => _SplashScreenState();
+          }
+
+          class _SplashScreenState extends State<SplashScreen> {
+            @override
+            void initState() {
+              super.initState();
+              Future.delayed(Duration(seconds: 3), () {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+              });
+            }
+
+            @override
+            Widget build(BuildContext context) {
+              return Scaffold(
+                body: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(colors: [Colors.teal.shade900, Colors.teal.shade600], begin: Alignment.topLeft, end: Alignment.bottomRight),
+                  ),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(25),
+                          decoration: BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+                          child: Icon(Icons.card_giftcard, size: 60, color: Colors.teal.shade800),
+                        ),
+                        SizedBox(height: 24),
+                        Text('G-Kiraya Plus', style: TextStyle(fontSize: 38, fontWeight: FontWeight.bold, color: Colors.white, letterSpacing: 2)),
+                        Text('Earn Cash, Free Shifting & Budget Rooms', style: TextStyle(fontSize: 14, color: Colors.teal.shade100, fontWeight: FontWeight.w500)),
+                        SizedBox(height: 15),
+                        Text('Developed by Geetesh & AI Partner', style: TextStyle(fontSize: 13, color: Colors.white60, fontStyle: FontStyle.italic)),
+                        SizedBox(height: 40),
+                        CircularProgressIndicator(color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            }
+          }
+
+          class LoginScreen extends StatelessWidget {
+            @override
+            Widget build(BuildContext context) {
+              return Scaffold(
+                body: Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Center(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('लॉगइन / साइनअप 🚀', style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: Colors.teal.shade900)),
+                          Text('रोजाना कैश इनाम और फ्री शिफ्टिंग वाला भारत का इकलौता ऐप', style: TextStyle(fontSize: 13, color: Colors.grey.shade600)),
+                          SizedBox(height: 35),
+                          TextField(
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                              labelText: 'अपना मोबाइल नंबर दर्ज करें',
+                              prefixIcon: Icon(Icons.phone, color: Colors.teal),
+                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            ),
+                          ),
+                          SizedBox(height: 25),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 55), backgroundColor: Colors.teal.shade700, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
+                            child: Text('अकाउंट खोलें और ₹50 बोनस पाएं', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                            onPressed: () {
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainNavigationPage()));
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+          }
+
+          class MainNavigationPage extends StatefulWidget {
+            @override
+            _MainNavigationPageState createState() => _MainNavigationPageState();
+          }
+
+          class _MainNavigationPageState extends State<MainNavigationPage> {
+            int _currentIndex = 0;
+            final List<Widget> _screens = [TenantView(), ShiftingClubView(), RewardsView(), AdminDashboardView()];
+
+            @override
+            Widget build(BuildContext context) {
+              return Scaffold(
+                body: _screens[_currentIndex],
+                bottomNavigationBar: BottomNavigationBar(
+                  currentIndex: _currentIndex,
+                  selectedItemColor: Colors.teal.shade800,
+                  unselectedItemColor: Colors.grey.shade600,
+                  type: BottomNavigationBarType.fixed,
+                  fontWeight: FontWeight.bold,
+                  onTap: (index) => setState(() => _currentIndex = index),
+                  items: [
+                    BottomNavigationBarItem(icon: Icon(Icons.search), label: 'कमरा खोजें'),
+                    BottomNavigationBarItem(icon: Icon(Icons.local_shipping), label: 'ਫਰੀ शिफ्टिंग क्लबर'),
+                    BottomNavigationBarItem(icon: Icon(Icons.card_giftcard), label: 'रोजाना कैश इनाम'),
+                    BottomNavigationBarItem(icon: Icon(Icons.dashboard), label: 'पार्टनर पैनल'),
+                  ],
+                ),
+              );
+            }
+          }
+
+          class TenantView extends StatelessWidget {
+            @override
+            Widget build(BuildContext context) {
+              return Scaffold(
+                appBar: AppBar(title: Text('G-Kiraya Plus', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)), backgroundColor: Colors.teal.shade800),
+                body: ListView(
+                  padding: EdgeInsets.all(16),
+                  children: [
+                    TextField(
+                      decoration: InputDecoration(
+                        hintText: 'शहर या कोचिंग एरिया खोजें...',
+                        prefixIcon: Icon(Icons.search, color: Colors.teal),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                    ),
+                    SizedBox(height: 15),
+                    Text('सत्यापित बजट कमरे:', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 10),
+                    Card(
+                      elevation: 3,
+                      child: ListTile(
+                        leading: Icon(Icons.home, color: Colors.teal, size: 35),
+                        title: Text('Premium 1 BHK - सेक्टर 16, फरीदाबाद', style: TextStyle(fontWeight: FontWeight.bold)),
+                        subtitle: Text('किराया: ₹ 6,500/महीना\nउपहार: इस कमरे को बुक करने पर ₹500 का रेंट कैशबैक सीधे UPI में!'),
+                        trailing: Icon(Icons.arrow_forward_ios, size: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }
+          }
+
+          class ShiftingClubView extends StatelessWidget {
+            @override
+            Widget build(BuildContext context) {
+              return Scaffold(
+                appBar: AppBar(title: Text('ਫਰੀ सामान शिफ्टिंग network 1 🚛', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)), backgroundColor: Colors.teal.shade800),
+                body: ListView(
+                  padding: EdgeInsets.all(16),
+                  children: [
+                    Card(
+                      color: Colors.blue.shade50,
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
