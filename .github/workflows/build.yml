@@ -23,6 +23,22 @@ jobs:
         with:
           channel: 'stable'
 
+      - name: Create Flutter Project Structure
+        run: |
+          if [ ! -f pubspec.yaml ]; then
+            flutter create --org com.geetesh.gkirayaplus --project-name g_kiraya_plus .
+          fi
+
+      - name: Sync main.dart Code
+        run: |
+          mkdir -p lib
+          if [ -f main.dart ]; then
+            mv main.dart lib/main.dart
+          elif [ -f lib/lib/main.dart ]; then
+            mv lib/lib/main.dart lib/main.dart
+            rm -rf lib/lib
+          fi
+
       - name: Install dependencies
         run: flutter pub get
 
@@ -33,4 +49,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter
