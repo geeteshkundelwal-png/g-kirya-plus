@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(GKirayaPlusApp());
+void main() {
+  runApp(const GKirayaPlusApp());
+}
 
 class GKirayaPlusApp extends StatelessWidget {
+  const GKirayaPlusApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'G-Kiraya Plus',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
-        scaffoldBackgroundColor: Color(0xFFF8FAFC),
+        scaffoldBackgroundColor: const Color(0xFFF8FAFC),
       ),
-      home: MainNavigationHub(),
+      home: const MainNavigationHub(),
     );
   }
 }
 
 class MainNavigationHub extends StatefulWidget {
+  const MainNavigationHub({super.key});
+
   @override
-  _MainNavigationHubState createState() => _MainNavigationHubState();
+  State<MainNavigationHub> createState() => _MainNavigationHubState();
 }
 
 class _MainNavigationHubState extends State<MainNavigationHub> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    GKirayaSuperDashboard(),
-    Center(child: Text('🏡 कमरा जोड़ें / मकान मालिक हब', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple))),
-    Center(child: Text('📚 ट्यूशन और कोचिंग व्यू', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple))),
-    Center(child: Text('⚙️ एडमिन कंट्रोल पैनल', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple))),
+    const GKirayaSuperDashboard(),
+    const Center(child: Text('🏡 कमरा जोड़ें / मकान मालिक हब', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple))),
+    const Center(child: Text('📚 ट्यूशन और कोचिंग व्यू', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple))),
+    const Center(child: Text('⚙️ एडमिन कंट्रोल पैनल', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.deepPurple))),
   ];
 
   @override
@@ -42,10 +48,10 @@ class _MainNavigationHubState extends State<MainNavigationHub> {
         selectedItemColor: Colors.deepPurple.shade700,
         unselectedItemColor: Colors.grey.shade600,
         type: BottomNavigationBarType.fixed,
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-        unselectedLabelStyle: TextStyle(fontSize: 11),
+        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+        unselectedLabelStyle: const TextStyle(fontSize: 11),
         onTap: (index) => setState(() => _currentIndex = index),
-        items: [
+        items: const [
           BottomNavigationBarItem(icon: Icon(Icons.bolt_rounded), label: 'सुपर होम'),
           BottomNavigationBarItem(icon: Icon(Icons.add_box_rounded), label: 'कमरा जोड़ें'),
           BottomNavigationBarItem(icon: Icon(Icons.menu_book_rounded), label: 'ट्यूशन'),
@@ -57,11 +63,13 @@ class _MainNavigationHubState extends State<MainNavigationHub> {
 }
 
 class GKirayaSuperDashboard extends StatelessWidget {
+  const GKirayaSuperDashboard({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
+        title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('G-Kiraya Plus ✨', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
@@ -72,7 +80,7 @@ class GKirayaSuperDashboard extends StatelessWidget {
         elevation: 2,
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -80,13 +88,13 @@ class GKirayaSuperDashboard extends StatelessWidget {
             children: [
               Container(
                 width: double.infinity,
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(colors: [Colors.deepPurple.shade800, Colors.purple.shade600]),
                   borderRadius: BorderRadius.circular(16),
-                  boxShadow: [BoxShadow(color: Colors.deepPurple.withOpacity(0.25), blurRadius: 8, offset: Offset(0, 4))],
+                  boxShadow: [BoxShadow(color: Colors.deepPurple.withOpacity(0.25), blurRadius: 8, offset: const Offset(0, 4))],
                 ),
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
@@ -101,9 +109,114 @@ class GKirayaSuperDashboard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
-              Text('किरायेदार हब (Tenant Special Core) 🔍', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87)),
-              SizedBox(height: 10),
+              const SizedBox(height: 20),
+              const Text('किरायेदार हब (Tenant Special Core) 🔍', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87)),
+              const SizedBox(height: 10),
               GridView.count(
                 crossAxisCount: 2,
                 shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1.1,
+                children: [
+                  _buildCard(context, Icons.search, 'स्मार्ट खोज & फ़िल्टर', 'सटीक बजट और लोकेशन', Colors.blue, null),
+                  _buildCard(context, Icons.chat_bubble_outline, 'इन-ऐप सुरक्षित चैट', 'बिना नंबर शेयर किए बात', Colors.teal, null),
+                  _buildCard(context, Icons.videocam, '360° वर्चुअल टूर', 'कमरे का असली वीडियो', Colors.indigo, null),
+                  _buildCard(context, Icons.people_alt, 'रूममेट मैचमेकिंग', 'आदतों के अनुसार पार्टनर', Colors.pink, null),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Text('मकान मालिक सुरक्षा और रिस्क मैनेजमेंट 🛡️', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87)),
+              const SizedBox(height: 10),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1.1,
+                children: [
+                  _buildCard(context, Icons.fact_check, 'किरायेदार Verification', 'सैलरी और सिबिल check', Colors.green, null),
+                  _buildCard(context, Icons.assignment, 'डिजिटल एग्रीमेंट', 'ONLINE सरकारी नियम', Colors.cyan, null),
+                  _buildCard(context, Icons.phonelink_lock, 'ऑटो-डेबिट किराया', 'सैलरी कट रेंट सुरक्षा', Colors.redAccent, null),
+                  _buildCard(context, Icons.gavel, 'AI लीगल विटनेस', 'बिना कोर्ट विवाद हल', Colors.brown, null),
+                  _buildCard(context, Icons.vpn_key, 'डिजिटल चाबी (Lock) 🔒', 'स्मार्ट ताला & मैकेनिक', Colors.blueGrey, const SmartLockStorePage()),
+                ],
+              ),
+              const SizedBox(height: 20),
+              const Text('रोज़मर्रा के अनोखे समाधान (Utility Suite) ⚡', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87)),
+              const SizedBox(height: 10),
+              GridView.count(
+                crossAxisCount: 2,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1.1,
+                children: [
+                  _buildCard(context, Icons.currency_exchange, 'रेंट बिडिंग (मोल-तोल)', 'किराए पर बोली लगाएं', Colors.orange, null),
+                  _buildCard(context, Icons.electric_bolt, 'बिजली बिल ट्रैकर', 'फोटो से ऑटो रीडिंग bill', Colors.amber.shade700, null),
+                  _buildCard(context, Icons.storefront, 'लोकल कबाड़-बाज़ार', 'सामान खरीदें या बेचें', Colors.purple, null),
+                  _buildCard(context, Icons.plumbing, 'SOS होम सर्विसेस', 'प्लंबर-इलेक्ट्रिशियन डेस्क', Colors.blueGrey, null),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCard(BuildContext context, IconData icon, String title, String sub, Color color, Widget? targetPage) {
+    return GestureDetector(
+      onTap: () {
+        if (targetPage != null) {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => targetPage));
+        }
+      },
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [BoxShadow(color: Colors.black10, blurRadius: 3, offset: const Offset(0, 1))],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              radius: 16,
+              backgroundColor: color.withOpacity(0.1),
+              child: Icon(icon, color: color, size: 18),
+            ),
+            const SizedBox(height: 8),
+            Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Colors.black87), maxLines: 1, overflow: TextOverflow.ellipsis),
+            const SizedBox(height: 2),
+            Text(sub, style: TextStyle(fontSize: 10, color: Colors.grey.shade600), maxLines: 2, overflow: TextOverflow.ellipsis),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class SmartLockStorePage extends StatelessWidget {
+  const SmartLockStorePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('स्मार्ट लॉक & डिजिटल चाबी स्टोर 🔒', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+        backgroundColor: Colors.blueGrey.shade800,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
